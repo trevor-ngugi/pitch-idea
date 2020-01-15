@@ -3,7 +3,7 @@ from . import main
 from flask_login import login_required,current_user
 from .forms import PostForm, CommentForm, UpdateProfile
 from ..models import User,Post
-from .. import db
+from .. import db,photos
 
 @main.route("/", methods = ["GET", "POST"])
 @login_required
