@@ -55,16 +55,17 @@ def post(id):
                             comment_form = comment_form,
                             user = user)
 
-@main.route("/profile/<int:id>/")
-def profile(id):
-    user = User.query.filter_by(id = id).first()
-    posts = Post.query.filter_by(user_id = id).all()
-    title = user.full_name
+@main.route("/profile/<uname>/")#<int:id>
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    #posts = Post.query.filter_by(user_id = id).all()
+    #title = user.full_name
 
     return render_template("profile/profile.html",
                             user = user,
-                            posts = posts,
-                            title = title)
+                           # posts = posts,
+                            #title = title
+                            )
 
 @main.route("/profile/<int:id>/update", methods = ["GET", "POST"])
 def update(id):

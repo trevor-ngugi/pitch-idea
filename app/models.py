@@ -19,6 +19,7 @@ class User(UserMixin,db.Model):
     profile_pic_path = db.Column(db.String())
     pass_secure = db.Column(db.String(255))
     posts = db.relationship("Post",backref = "posts",lazy = "dynamic")
+    comments = db.relationship("Comment",backref = "comments",lazy = "dynamic")
 
     @property
     def password(self):
@@ -43,7 +44,7 @@ class Post(db.Model):
     posted_at = db.Column(db.DateTime,default=datetime.utcnow)
     category = db.Column(db.String)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
-    # comments = db.relationship("Comment",backref = "post_comments",lazy = "dynamic")
+    comments = db.relationship("Comment",backref = "post_comments",lazy = "dynamic")
 
     def save_post(self):
         db.session.add(self)
@@ -57,6 +58,24 @@ class Post(db.Model):
     @classmethod
     def get_all_posts(cls):
         return Post.query.order_by(Post.posted_at.asc()).all()
+
+class Comment(db.Model):
+    __tablename__ = "comments"
+
+    comment_id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String)
+    posted_at = db.Column(db.DateTime,default=datetime.utcnow)
+    post_id = db.Column(db.Integer,db.ForeignKey("posts.post_id"))
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(cls,id):
+        comments = Post.query.filter_by(post_id = id).all()
+        return comments
 
     def __repr__(self):
         return f'User {self.username}'
