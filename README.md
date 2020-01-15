@@ -63,7 +63,7 @@ You can provide feedback or raise any issues/ bugs through the following means:
 * ngugitrevor@gmail.com
 
 ## Live Site link
-You can view the live application by following this [link](https://).
+You can view the live application by following this [link](https://pitchidea.herokuapp.com/ ).
 
 ## License
 MIT License
