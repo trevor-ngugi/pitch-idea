@@ -2,6 +2,11 @@ from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
+from . import login_manager
+
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(int(user_id))
 
 
 class User(UserMixin,db.Model):
@@ -9,6 +14,7 @@ class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key = True)
     full_name = db.Column(db.String(255))
     username = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique = True, index = True)
     pass_secure = db.Column(db.String(255))
     posts = db.relationship("Post",backref = "posts",lazy = "dynamic")
 
@@ -24,8 +30,7 @@ class User(UserMixin,db.Model):
     def verify_password(self,password):
         return check_password_hash(self.pass_secure,password)
 
-    def __repr__(self):
-        return f'User {self.username}'
+
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -46,3 +51,10 @@ class Post(db.Model):
     def get_user_posts(cls,id):
         posts = Post.query.filter_by(user_id=id).all()
         return posts
+
+    @classmethod
+    def get_all_posts(cls):
+        return Post.query.order_by(Post.posted_at.asc()).all()
+
+    def __repr__(self):
+        return f'User {self.username}'
